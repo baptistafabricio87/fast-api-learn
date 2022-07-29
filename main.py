@@ -41,3 +41,20 @@ def get_model(model_name: ModelName):
 @app.get("/items/")
 def read_item(skip: int = 0, limit: int = 0):
     return fake_items_db[skip : skip + limit]
+
+
+@app.get("/items/{item_id}")
+def read_item(item_id: str, q: str | None = None):
+    if q:
+        return {"item_id": item_id, "q": q}
+    return {"item_id": item_id}
+
+# Import Union if Python 3.6 and above
+# from typing import Union
+# 
+# Implementaion for Python 3.6 and above
+# @app.get("/items/{item_id}")
+# def read_item(item_id: str, q: Union[str, None] = None):
+#     if q:
+#         return {"item_id": item_id, "q": q}
+#     return {"item_id": item_id}
