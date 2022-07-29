@@ -25,6 +25,11 @@ def create_item(item: Item):
     return item_dict
 
 
+@app.put("/items/{item_id}")
+def create_item(item_id: int, item: Item):
+    return {"item_id": item_id, **item.dict()}
+
+
 @app.get("/user/me")
 def read_user_me():
     return {"user_id":"id current user"}
