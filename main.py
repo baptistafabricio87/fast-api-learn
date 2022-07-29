@@ -42,7 +42,7 @@ def get_model(model_name: ModelName):
 def read_item(skip: int = 0, limit: int = 0):
     return fake_items_db[skip : skip + limit]
 
-
+# Query Optional Parameter
 @app.get("/items/{item_id}")
 def read_item(item_id: str, q: str | None = None):
     if q:
@@ -58,3 +58,32 @@ def read_item(item_id: str, q: str | None = None):
 #     if q:
 #         return {"item_id": item_id, "q": q}
 #     return {"item_id": item_id}
+
+
+# # Query parameter type conversion
+# @app.get("/items/{item_id}")
+# def read_item(item_id: str, q: str | None = None, short: bool = False):
+#     item = {"item_id": item_id}
+#     if q:
+#         item.update({"q": q})
+#     if not short:
+#         item.update(
+#             {"description": "This is an amazing item that has a long descrition"}
+#         )
+#     return item
+
+# Multiple path and query parameters
+@app.get("/users/{user_id}/items/{item_id}")
+def read_user_item(
+    user_id: int, item_id: str, short: bool = False, q: str | None = None
+):
+
+    item = {"item_id": item_id, "owner_id": user_id}
+    if q:
+        item.update({"q": q})
+    if not short:
+        item.update(
+            {"description": "This is an amazing item that has a long descrition"}
+        )
+    return item
+
