@@ -1,5 +1,4 @@
 """LEARNING FAST API - TUTORIAL USER GUIDE"""
-from typing import Union
 
 from fastapi import FastAPI
 
@@ -16,7 +15,7 @@ def create_item(item: Item):
     return item
 
 
-@app.post("/items/")
+@app.post("/items/", status_code=201)
 def create_item(item: Item):
     item_dict = item.dict()
     if item.tax:
@@ -24,10 +23,19 @@ def create_item(item: Item):
         item_dict.update({"price_with_tax": price_with_tax})
     return item_dict
 
+"""Python 3.6 and above"""
+# @app.put("/items/{item_id}")
+# def create_item(item_id: int, item: Item):
+#     return {"item_id": item_id, **item.dict()}
 
-@app.put("/items/{item_id}")
-def create_item(item_id: int, item: Item):
-    return {"item_id": item_id, **item.dict()}
+
+"""Python 3.10 and above"""
+@app.put("/items/{item_id}", status_code=201)
+def create_item(item_id: int, item: Item, q: str | None = None):
+    result = {"item_id": item_id, **item.dict()}
+    if q:
+        result.update({"q": q})
+    return result
 
 
 @app.get("/user/me")
