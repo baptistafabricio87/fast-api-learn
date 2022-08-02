@@ -1,13 +1,32 @@
 """LEARNING FAST API - TUTORIAL USER GUIDE"""
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Query, Path
 
 from enums import ModelName
 from models import Item
 
-app = FastAPI()
+app = FastAPI(title="Learn FastAPI")
 
 fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+
+"""Query Parameter and String Validations"""
+@app.get("/items/")
+def read_items(
+    item_query: str | None = Query(
+        default=[],
+        alias="item-query",
+        title="Query String", 
+        description="Query strings for the items to search in the database that have a good match",
+        min_length=3,
+        max_length=10,
+        deprecated=True
+    )
+):
+    results = { "items": [{"item_id": "Foo"}, {"item_id": "Bar"}, {"item_id": "Baz"}] }
+    if item_query:
+        results.update({"item-query": item_query})
+    return results
+
 
 """Using Data Model"""
 @app.post("/item/new", status_code=201)
@@ -75,9 +94,9 @@ def get_model(model_name: ModelName):
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
-@app.get("/items/")
-def read_item(skip: int = 0, limit: int = 0):
-    return fake_items_db[skip : skip + limit]
+# @app.get("/items/")
+# def read_item(skip: int = 0, limit: int = 0):
+#     return fake_items_db[skip : skip + limit]
 
 
 """# Query Optional Parameter"""
