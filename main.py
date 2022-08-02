@@ -1,31 +1,42 @@
 """LEARNING FAST API - TUTORIAL USER GUIDE"""
 
-from fastapi import FastAPI, Query, Path
+from fastapi import FastAPI, Path, Query
 
 from enums import ModelName
 from models import Item
 
 app = FastAPI(title="Learn FastAPI")
 
-fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+"""Path Parameter and Numeric Validations"""
+@app.get("/items/{item_id}", status_code=201)
+def read_items(
+    *,
+    item_id: int = Path(title="The ID of the item to get", ge=1),
+    q: str
+):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    return results
+
 
 """Query Parameter and String Validations"""
-@app.get("/items/")
-def read_items(
-    item_query: str | None = Query(
-        default=[],
-        alias="item-query",
-        title="Query String", 
-        description="Query strings for the items to search in the database that have a good match",
-        min_length=3,
-        max_length=10,
-        deprecated=True
-    )
-):
-    results = { "items": [{"item_id": "Foo"}, {"item_id": "Bar"}, {"item_id": "Baz"}] }
-    if item_query:
-        results.update({"item-query": item_query})
-    return results
+# @app.get("/items/")
+# def read_items(
+#     item_query: str | None = Query(
+#         default=[],
+#         alias="item-query",
+#         title="Query String", 
+#         description="Query strings for the items to search in the database that have a good match",
+#         min_length=3,
+#         max_length=10,
+#         deprecated=True
+#     )
+# ):
+#     results = { "items": [{"item_id": "Foo"}, {"item_id": "Bar"}, {"item_id": "Baz"}] }
+#     if item_query:
+#         results.update({"item-query": item_query})
+#     return results
 
 
 """Using Data Model"""
@@ -49,7 +60,7 @@ def create_item(item: Item):
 
 
 """Python 3.10 and above"""
-@app.put("/items/{item_id}", status_code=201)
+@app.put("/item/{item_id}", status_code=201)
 def create_item(item_id: int, item: Item, q: str | None = None):
     result = {"item_id": item_id, **item.dict()}
     if q:
@@ -87,13 +98,13 @@ def read_user_item(
 def get_model(model_name: ModelName):
     if model_name == ModelName.alexnet:
         return {"model_name": model_name, "message": "Deep Learning FTW"}
-
     if model_name.value == "lenet":
         return {"model_name": model_name, "message": "LeCNN all the images"}
-
     return {"model_name": model_name, "message": "Have some residuals"}
 
 
+# fake_items_db = [{"item_name": "Foo"}, {"item_name": "Bar"}, {"item_name": "Baz"}]
+# 
 # @app.get("/items/")
 # def read_item(skip: int = 0, limit: int = 0):
 #     return fake_items_db[skip : skip + limit]
@@ -110,6 +121,8 @@ def get_model(model_name: ModelName):
 """# Import Union if Python 3.6 and above"""
 # from typing import Union
 # 
+
+
 """# Implementaion for Python 3.6 and above"""
 # @app.get("/items/{item_id}")
 # def read_item(item_id: str, q: Union[str, None] = None):
@@ -132,8 +145,7 @@ def get_model(model_name: ModelName):
 
 
 """Required query parameters"""
-@app.get("/items/{item_id}")
-def read_user_item(item_id: str, needy: str):
+@app.get("/item/{item_id}")
+def read_need_item(item_id: str, needy: str):
     item = {"item_id": item_id, "needy": needy}
     return item
-
