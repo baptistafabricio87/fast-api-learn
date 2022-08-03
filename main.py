@@ -1,11 +1,34 @@
 """LEARNING FAST API - TUTORIAL USER GUIDE"""
+
 from fastapi import FastAPI, Path, Query
 
 from enums import ModelName
-from models import Item
+from models import Item, User
 
 
 app = FastAPI(title="Learn FastAPI")
+
+
+"""Mix Path, Query n Body parameters"""
+@app.put("/items/{item_id}")
+def update_item(
+    *,
+    item_id: int = Path(title="The ID of the item to get", ge=1, le=5),
+    q: str | None = None,
+    item: Item | None = None,
+):
+    results = {"item_id": item_id}
+    if q:
+        results.update({"q": q})
+    if item:
+        results.update({"item": item})
+    return results
+
+"""Multi Body parameters"""
+@app.put("/item-user/{item_id}")
+def update_item_user(item_id: int, item: Item, user: User):
+    results = {"item_id": item_id, "item": item, "user": user}
+    return results
 
 
 """Path Parameter and Numeric Validations"""

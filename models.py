@@ -10,6 +10,11 @@ class Item(BaseModel):
     tax: float | None = None
 
 
+class User(BaseModel):
+    username: str
+    full_name: str | None = None
+
+
 """Implementation from Python 3.6 and above"""
 # from typing import Union
 # 
@@ -18,3 +23,7 @@ class Item(BaseModel):
 #     description: Union[str, None] = None
 #     price: float
 #     tax: Union[float, None] = None
+# 
+# class User(BaseModel):
+#     username: str
+#     full_name: Union[str, None] = None
