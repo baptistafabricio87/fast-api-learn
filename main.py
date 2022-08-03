@@ -1,18 +1,23 @@
 """LEARNING FAST API - TUTORIAL USER GUIDE"""
-
 from fastapi import FastAPI, Path, Query
 
 from enums import ModelName
 from models import Item
 
+
 app = FastAPI(title="Learn FastAPI")
+
 
 """Path Parameter and Numeric Validations"""
 @app.get("/items/{item_id}", status_code=201)
 def read_items(
     *,
-    item_id: int = Path(title="The ID of the item to get", ge=1),
-    q: str
+    item_id: int = Path(title="The ID of the item to get", ge=1, le=5),
+    q: str,
+    # le == less than or equal <=
+    # gt == greater than >
+    # lt == less than <
+    # ge == greater than or equal >= 
 ):
     results = {"item_id": item_id}
     if q:
