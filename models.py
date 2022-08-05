@@ -1,8 +1,19 @@
 """Create Data Model"""
 from pydantic import BaseModel, Field
-
+from typing import List
 
 """Implementaion in Python 3.10 and above"""
+class Image(BaseModel):
+    url: str
+    name: str
+
+
+class User(BaseModel):
+    user_id: int
+    username: str
+    full_name: str | None = None
+
+    
 class Item(BaseModel):
     name: str
     description: str | None = Field(
@@ -12,14 +23,11 @@ class Item(BaseModel):
         gt=0, description="Price must be greater than zero"
     )
     tax: float | None = None
-    tag: list = []
+    tag: set[str] = set()
+    image: Image | None = None
+    user: User | None = None     
+
     
-
-class User(BaseModel):
-    username: str
-    full_name: str | None = None
-
-
 """Implementation in Python 3.6 and above"""
 # from typing import Union
 #_
