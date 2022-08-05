@@ -1,6 +1,6 @@
 """LEARNING FAST API - TUTORIAL USER GUIDE"""
 
-from fastapi import FastAPI, Path, Query
+from fastapi import FastAPI, Path, Query, Body
 
 from enums import ModelName
 from models import Item, User
@@ -12,22 +12,35 @@ app = FastAPI(title="Learn FastAPI")
 """Mix Path, Query n Body parameters"""
 @app.put("/items/{item_id}")
 def update_item(
-    *,
-    item_id: int = Path(title="The ID of the item to get", ge=1, le=5),
-    q: str | None = None,
-    item: Item | None = None,
+    item_id: int,
+    item: Item
 ):
-    results = {"item_id": item_id}
-    if q:
-        results.update({"q": q})
-    if item:
-        results.update({"item": item})
+    results = {"item_id": item_id, "item": item}
     return results
 
 """Multi Body parameters"""
+""" Quando um parametro da funcao recebe 
+    um tipo complexo (Classes/Models) este 'e passado 
+    no corpo da requisicao.
+    Quando recebe um tipo basico (str, int, float), este 'e 
+    passado como argumento da requisicao (Query).
+"""
 @app.put("/item-user/{item_id}")
-def update_item_user(item_id: int, item: Item, user: User):
-    results = {"item_id": item_id, "item": item, "user": user}
+def update_item_user(
+    *,
+    item_id: int,
+    item: Item,
+    user: User,
+    importance: int = Body(),
+    q: str | None = None
+):
+    results = {
+        "item_id": item_id,
+        "item": item,
+        "user": user,
+        "importance": importance,
+        "q": q
+    }
     return results
 
 
@@ -146,11 +159,9 @@ def get_model(model_name: ModelName):
 #     return {"item_id": item_id}
 
 
-"""# Import Union if Python 3.6 and above"""
+"""# Import Union for Python 3.6 and above"""
 # from typing import Union
 # 
-
-
 """# Implementaion for Python 3.6 and above"""
 # @app.get("/items/{item_id}")
 # def read_item(item_id: str, q: Union[str, None] = None):
