@@ -12,7 +12,8 @@ class Item(BaseModel):
         gt=0, description="Price must be greater than zero"
     )
     tax: float | None = None
-
+    tag: list = []
+    
 
 class User(BaseModel):
     username: str
