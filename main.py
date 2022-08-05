@@ -13,7 +13,7 @@ app = FastAPI(title="Learn FastAPI")
 @app.put("/items/{item_id}")
 def update_item(
     item_id: int,
-    item: Item
+    item: Item = Body(embed=False)
 ):
     results = {"item_id": item_id, "item": item}
     return results
